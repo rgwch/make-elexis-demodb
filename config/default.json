@@ -1,0 +1,22 @@
+{
+    "source":{
+      "client": "mysql2",
+      "connection":{
+        "host": "localhost",
+        "database": "elexis",
+        "user": "elexisuser",
+        "password": "topsecret"
+      }
+    },
+    "dest":{
+      "client": "sqlite3",
+      "connection":{
+        "filename": "./demodb.db"
+      }
+    },
+    "process":{
+      "number": 100,
+      "random": true,
+      "anonymize": true
+    }
+}
