@@ -1,4 +1,5 @@
 const fetch = require('node-fetch')
+const transfer_patient=require('./patient')
 
 const exec=async function(source, dest, def){
   const response = await fetch(
@@ -13,12 +14,24 @@ const exec=async function(source, dest, def){
     const trimmed = stm.trim().replace(/\s\s/g," ")
     if (trimmed.length > 0) {
       const res=await dest.raw(trimmed)
-      console.log(res)
+      // console.log(res)
     }
   }
-  const patids=await source.select("id").from('kontakt')
+  const patids=await source("kontakt").where({"istpatient":"1","deleted":"0"}).whereNotNull("geburtsdatum").whereNot("geburtsdatum","").select("id")
   const l=patids.length
-  return l+" Datensätze transferiert."
+  for(let i=0;i<def.number;i++){
+    let idx=def.random ? Math.round(l*Math.random()) : i
+    while(patids[idx]==undefined){
+      idx+=1
+      if(idx>=l){
+        idx=0
+      }
+    }
+    const patid=patids[idx]
+    const pat=await transfer_patient(source,dest, patid.id)
+    console.log(pat.bezeichnung1+" "+pat.bezeichnung2+", "+pat.geburtsdatum)
+  }
+  return "ok"
 }
 
 
