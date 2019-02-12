@@ -11,7 +11,7 @@
     "dest":{
       "client": "sqlite3",
       "connection":{
-        "filename": "./demodb.db"
+        // "filename": "./demodb.db"
       }
     },
     "process":{
