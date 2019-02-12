@@ -9,9 +9,12 @@
       }
     },
     "dest":{
-      "client": "sqlite3",
+      "client": "mysql2",
       "connection":{
-        // "filename": "./demodb.db"
+        "host": "localhost",
+        "database": "demodb",
+        "user": "elexisuser",
+        "password": "topsecret"
       }
     },
     "process":{

@@ -1,7 +1,8 @@
 const fetch = require('node-fetch')
 const transfer_patient=require('./patient')
+const {source,dest,checkinsert}=require('../db')
 
-const exec=async function(source, dest, def){
+const exec=async function(def){
   const response = await fetch(
     "https://raw.githubusercontent.com/rgwch/elexis-3-core/ungrad2019/bundles/ch.elexis.core.data/rsc/createDB.script")
   if (response.status != 200) {
@@ -28,7 +29,7 @@ const exec=async function(source, dest, def){
       }
     }
     const patid=patids[idx]
-    const pat=await transfer_patient(source,dest, patid.id)
+    const pat=await transfer_patient(patid.id)
     console.log(pat.bezeichnung1+" "+pat.bezeichnung2+", "+pat.geburtsdatum)
   }
   return "ok"
