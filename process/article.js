@@ -7,8 +7,10 @@ const log = require('../logger')
 const exec = async joint => {
     await checkinsert("patient_artikel_joint", joint)
     await checkKontakt(joint.prescriptor)
+    let id
     if (joint.artikel) {
         const ref = joint.artikel.split("::")
+        id=ref[1]
         switch (ref[0]) {
             case "ch.artikelstamm.elexis.common.ArtikelstammItem":
             case "at.medevit.ch.artikelstamm.elexis.common.ArtikelstammItem":
@@ -26,9 +28,11 @@ const exec = async joint => {
         }
     }else{
         if(joint.artikelid){
+            id=joint.artikelid
             await checktransfer('artikel',joint.artikelid)
         }
     }
+    await checktransfer('artikel_details',id)
 }
 
 module.exports=exec

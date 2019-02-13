@@ -8,6 +8,15 @@ const exec = async def => {
   if (def.random) {
     await loaddata()
   }
+  const config = await source('config')
+  for (const entry of config) {
+    await checkinsert('config', entry)
+  }
+  const userconfig = await source('userconfig')
+  for (const entry of userconfig) {
+    await checkinsert('userconfig',entry)
+  }
+
   const patids = await source("kontakt")
     .where({ istpatient: "1", deleted: "0" })
     .whereNotNull("geburtsdatum")

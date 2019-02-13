@@ -15,6 +15,15 @@ const transfer = async fall => {
   for(const encounter of encounters){
     await transfer_encounter(encounter)
   }
+  const bills= await source('rechnungen').where("fallid",fall.id)
+  for(const bill of bills){
+    await checkinsert('rechnungen',bill)
+    const payments=source('zahlungen').where('rechungsid',bill.id)
+    for(const payment of payments){
+      await checkinsert('zahlungen',payment)
+    }
+  }
+
 }
 
 module.exports = transfer

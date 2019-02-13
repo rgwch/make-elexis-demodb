@@ -1,25 +1,97 @@
-# Create Demo-Database
+# make-demodb
 
 This is a tool for [Elexis](http://www.github.com/elexis)-Development. It creates a demo-database from a working elexis system.
 Such a thing is useful for testing and demonstration purposes.
+At this time, only mysql systems are supported. But it should not be too difficult to add more database types, or even different types for source and destination. 
 
-## Preparation
+## Prerequisites
 
-* Create an empty demo database e.g. `CREATE DATABASE demodb;`
-* create a user with full access to that database (or use an existing user for that), e.g `GRANT ALL ON demodb.* to elexisuser@'%' identified by 'topsecret';`
+* A working elexis database
+* The mysqldump utility must be installed and available
+* NodeJS 11 or higher
+
+## Preparation and run
+
+* create a user with full access to the demo database (or use an existing user for that), e.g `GRANT ALL ON demodb.* to elexisuser@'%' identified by 'topsecret';`
 * prepare the configuration for access to source and dest-Databas ein config/default.json
 * run the script with `node index.js`
 
 You can also create several configurations in config, e.g 'praxis2.json' and then run with: `NODE_ENV=praxis2 node index.js`
 
-## Result
+The script will run ./copy_structure at the beginning to create an empty demo-database. So if you wish any special processing or different databases, you can modify ./copy_structure accordingly.
+
+### Result
 
 * The script will process as many patients as the value 'process.number' in the configuration indicates.
-* If 'process.random' is true, it will select the patients randomly. Else the first n patients ar processed.
+* If 'process.random' is true, it will select the patients randomly. Else the first n patients are processed.
 * If 'process.anonymize' is true, patient names and contact informations are replaced with fake values while processing- This is highly recommended.
 * When processing a patient entry, all data referenced by this patient will be copied as well (medications, prescriptions, certificates, billings and so on).
 
-## Postprocess
+### Postprocess
 
-The destination database is just a valid elexis database. You can use it directly, or create a dump from it to transefr on another machine.
+The destination database is just a valid elexis database. You can use it directly, or create a dump from it to transfer on another machine.
 
+## Configuration
+
+All Configuration happens in config/*.json
+
+```json
+{
+    "source":{  // The original database
+      "client": "mysql2",   // All databases supported by knexjs are possible
+      "connection":{
+        "host": "localhost",
+        "database": "elexis",
+        "user": "elexisuser",
+        "password": "topsecret"
+      }
+    },
+    "dest":{    // The target database
+      "client": "mysql2",   // All databases supported by knexjs are possible
+      "connection":{
+        "host": "localhost",
+        "database": "demodb",
+        "user": "elexisuser",   // should be the same as in source (or modify copy_structure)
+        "password": "topsecret" // should be the same as in source
+      }
+    },
+    "process":{
+      "number": 100,        // Number of Patient datasets to transmit
+      "random": true,       // Select randomly (or ue the first "number" entried)
+      "anonymize": true,    // replace all names with fake names
+      "loglevel": "info"    // One of debug, info, warn, error
+    }
+}
+```
+
+## Limitations
+
+### Anonymization
+
+Only the names are anonymized. Encounter entries and documents stay unmodified. If you want more
+anonymizing, the following procedure is recommended
+
+* create a full copy of your database (e.g. with mysqldump and reload)
+* connect Elexis with that database 
+* load the plugin [dbshaker](https://wiki.elexis.info/Ch.elexis.support.dbshaker.feature.feature.group) from the elexis-3-base repository
+* anonymize the database using that plugin 
+* run make-demodb on that database (in that case, anonymizing is not needed, of course)
+
+### Completeness
+
+Make-demodb does copy the following data:
+
+* The full contents of 'config' and 'userconfig' tables
+* As many Patient data from 'kontakt' as indicated by the 'number' configuration.
+* cases from 'faelle' belonging to selected patients.
+* encounter data from 'behandlungen' matching to selected cases.
+* Articles from 'artikel' belonging to selected patients.
+* Articles from 'artikelstamm_ch' belonging to selected patients.
+* bills from 'rechnungen' belonging to selected cases.
+* payment from 'zahlungen' belonging to selected bills.
+
+Make-demodb does not copy the following data:
+
+* external documents from 'omnivore' (since anonymizing would not be possible)
+* outgoing documents from 'briefe' (since anonymizing qould be quite difficult)
+* Blobs from 'Ĥeap' and 'heaps' (since anonymizing can't be guaranteed)
