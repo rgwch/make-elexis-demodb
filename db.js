@@ -22,13 +22,17 @@ const checkinsert = async (table, element) => {
     log.warn(`element is undefined in checkinsert ${table}. Aborting`)
   } else {
     log.debug(`Checkinsert ${element.id} in ${table}`)
-    const exists = await dest(table).where("id", element.id)
-    if (exists.length === 0) {
-      log.debug(`${element.id} does not exist`)
-      await dest(table).insert(element)
-      log.debug(`Inserted ${element.id} in ${table}.`)
-    } else {
-      log.debug(`${element.id} already exists in ${table}`)
+    try {
+      const exists = await dest(table).where("id", element.id)
+      if (exists.length === 0) {
+        log.debug(`${element.id} does not exist`)
+        await dest(table).insert(element)
+        log.debug(`Inserted ${element.id} in ${table}.`)
+      } else {
+        log.debug(`${element.id} already exists in ${table}`)
+      }
+    } catch (err) {
+      log.error("Error in checkinsert ", err)
     }
   }
 }
@@ -56,6 +60,7 @@ const checktransfer = async (table, id) => {
         if (exists.length === 0) {
           log.debug(`${id} does not exist`)
           await dest(table).insert(elem)
+          log.debug(`inserted ${elem.id} into ${table}`)
         } else {
           log.debug(`${elem.id} already exists`)
           return undefined

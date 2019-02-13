@@ -10,7 +10,8 @@
       "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceFolder}/index.js",
-      "env": {"NODE_ENV":"macbook"}
+      "env": {"NODE_ENV":"praxis"},
+      "outputCapture": "std"
     }
   ]
 }
