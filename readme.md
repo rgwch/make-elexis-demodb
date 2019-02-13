@@ -17,6 +17,7 @@ You can also create several configurations in config, e.g 'praxis2.json' and the
 * The script will process as many patients as the value 'process.number' in the configuration indicates.
 * If 'process.random' is true, it will select the patients randomly. Else the first n patients ar processed.
 * If 'process.anonymize' is true, patient names and contact informations are replaced with fake values while processing- This is highly recommended.
+* When processing a patient entry, all data referenced by this patient will be copied as well (medications, prescriptions, certificates, billings and so on).
 
 ## Postprocess
 

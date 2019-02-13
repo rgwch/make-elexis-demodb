@@ -20,6 +20,7 @@
     "process":{
       "number": 100,
       "random": true,
-      "anonymize": true
+      "anonymize": true,
+      "loglevel": "debug"
     }
 }

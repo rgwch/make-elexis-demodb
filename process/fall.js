@@ -4,16 +4,17 @@ const transfer_encounter=require('./encounter')
 
 const transfer = async fall => {
   if (fall.garantid) {
-    await checkKontakt(fall.garantid)
+    await checkinsert('kontakt', fall.garantid)
   }
   if (fall.kostentrid) {
-    await checkKontakt(fall.kostentrid)
-  }
-  const encounters=await source("behandlungen").where("fallid",fall.id)
-  for(const encounter of encounters){
-    transfer_encounter(encounter)
+    await checkinsert('kontakt', fall.kostentrid)
   }
   await checkinsert('faelle',fall)
+
+  const encounters=await source("behandlungen").where("fallid",fall.id)
+  for(const encounter of encounters){
+    await transfer_encounter(encounter)
+  }
 }
 
 module.exports = transfer
