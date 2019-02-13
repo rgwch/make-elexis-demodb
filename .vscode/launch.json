@@ -10,7 +10,7 @@
       "request": "launch",
       "name": "Launch Program",
       "program": "${workspaceFolder}/index.js",
-      "env": {"NODE_ENV":"brumm"},
+      "env": {"NODE_ENV":"macbook"},
       "outputCapture": "std"
     }
   ]

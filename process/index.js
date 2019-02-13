@@ -1,6 +1,6 @@
 const fetch = require("node-fetch")
 const transfer_patient = require("./patient")
-const { source, dest, checkinsert } = require("../db")
+const { source, dest, checkinsert, copytable } = require("../db")
 const { loaddata } = require('../faker/faker')
 const log = require('../logger')
 
@@ -8,14 +8,21 @@ const exec = async def => {
   if (def.random) {
     await loaddata()
   }
-  const config = await source('config')
-  for (const entry of config) {
-    await checkinsert('config', entry)
-  }
-  const userconfig = await source('userconfig')
-  for (const entry of userconfig) {
-    await checkinsert('userconfig',entry)
-  }
+  await copytable('config')
+  await copytable('userconfig')
+  await copytable('vk_preise')
+  await copytable('user_')
+  await copytable('role')
+  await copytable('user_role_joint')
+  await copytable('right_')
+  await copytable('role_right_joint')
+  await copytable('xid')
+  await copytable('etiketten')
+  await copytable('etiketten_object_link')
+  await copytable('etiketten_objclass_link')
+  await copytable('dbimage')
+  await copytable('reminders')
+  await copytable('reminders_responsible_link')
 
   const patids = await source("kontakt")
     .where({ istpatient: "1", deleted: "0" })

@@ -52,7 +52,7 @@ const checktransfer = async (table, id) => {
     try {
       const elems = await source(table).where("id", id)
       if (elems.length === 0) {
-        log.warn(`coult not retrieve ${id} from ${table}`)
+        log.warn(`could not retrieve ${id} from ${table}`)
       } else {
         const elem = elems[0]
         log.debug(`fetched ${elem.id} from source`)
@@ -61,6 +61,7 @@ const checktransfer = async (table, id) => {
           log.debug(`${id} does not exist`)
           await dest(table).insert(elem)
           log.debug(`inserted ${elem.id} into ${table}`)
+          return elem
         } else {
           log.debug(`${elem.id} already exists`)
           return undefined
@@ -68,9 +69,20 @@ const checktransfer = async (table, id) => {
       }
     } catch (err) {
       log.error("An Error was thrown in checkTransfer: ", err)
-      // never mind
+      return undefined
     }
   }
 }
 
-module.exports = { source, dest, checkinsert, checktransfer }
+const copytable = async tablename => {
+  try {
+    const entries = await source(tablename)
+    for (const entry of entries) {
+      dest(tablename).insert(entry)
+    }
+  } catch (err) {
+    log.error(`Error while copying table ${tablename}: `, err)
+  }
+}
+
+module.exports = { source, dest, checkinsert, checktransfer, copytable }

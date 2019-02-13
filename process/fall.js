@@ -18,7 +18,7 @@ const transfer = async fall => {
   const bills= await source('rechnungen').where("fallid",fall.id)
   for(const bill of bills){
     await checkinsert('rechnungen',bill)
-    const payments=source('zahlungen').where('rechungsid',bill.id)
+    const payments=await source('zahlungen').where('rechnungsid',bill.id)
     for(const payment of payments){
       await checkinsert('zahlungen',payment)
     }

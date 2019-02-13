@@ -1,5 +1,5 @@
 const transfer_fall = require("./fall")
-const { source, dest, checkinsert } = require("../db")
+const { source, dest, checkinsert, checktransfer } = require("../db")
 const checkKontakt = require("./kontakt.js")
 const transfer_articles = require("./article")
 
@@ -21,6 +21,28 @@ const transfer = async patid => {
   const articles = await source('patient_artikel_joint').where("patientid", patid)
   for (const article of articles) {
     await transfer_articles(article)
+  }
+  const konto = await source('konto').where('patientid',patid)
+  for(const movement of konto){
+    await checkinsert('konto',movement)
+    await checktransfer('rechnungen',movement.rechnungsid)
+    await checktransfer('zahlungen', movement.zahlungsid)
+  }
+  const briefe = await source('briefe').where('patientid',patid)
+  for(const brief of briefe){
+    await checkinsert('briefe',brief)
+    await checkKontakt(brief.absenderid)
+    await checkKontakt(brief.destid)
+  }
+
+  const laborwerte=await source('laborwerte').where('patientid',patid)
+  for(const laborwert of laborwerte){
+    await checkinsert('laborwerte',laborwert)
+    const item=await checktransfer('laboritems',laborwert.itemid)
+    if(item){
+      await checkKontakt(item.laborid)
+    }
+    await checkKontakt(laborwert.originid)
   }
   return pat
 }
