@@ -1,37 +1,18 @@
 const processor = require("./process")
 const mysql = require("mysql2")
 const cfg = require("config")
-const log=require('./logger')
+const log = require('./logger')
+const spawn = require('child_process')
 
+const conn=cfg.get("dest.connection")
+spawn.execFileSync("./copy_structure",[conn.user,conn.password,cfg.get("source.connection.database"),conn.database])
 
-const conn = mysql.createConnection({
-  host: cfg.get("dest.connection.host"),
-  user: cfg.get("dest.connection.user"),
-  password: cfg.get("dest.connection.password")
-})
-
-const destdb = cfg.get("dest.connection.database")
-log.debug(`dropping database ${destdb}`)
-conn.query("DROP DATABASE " + destdb, err => {
-  if(err){
-    log.info("Errmsg ",err)
-  }
-  log.debug(`creating database ${destdb}`)
-  conn.query("CREATE DATABASE " + destdb, err => {
-    if (err) {
-      log.error("Fatal error ",err)
-      throw err
-    }
-    conn.end()
-    
-    processor(cfg.get("process"))
-      .then(result => {
-        console.log(result)
-        process.exit(0)
-      })
-      .catch(err => {
-        console.log("***FEHLER*** " + err)
-        process.exit(-1)
-      })
+processor(cfg.get("process"))
+  .then(result => {
+    console.log(result)
+    process.exit(0)
   })
-})
+  .catch(err => {
+    console.log("***FEHLER*** " + err)
+    process.exit(-1)
+  })

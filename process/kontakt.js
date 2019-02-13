@@ -1,4 +1,4 @@
-const {source,dest}=require('../db')
+const {source,dest,checkinsert}=require('../db')
 const {getFirstname,getLastname}=require('../faker/faker')
 const cfg=require('config')
 const def=cfg.get('process')
