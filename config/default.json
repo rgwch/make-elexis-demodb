@@ -21,6 +21,6 @@
       "number": 100,
       "random": true,
       "anonymize": true,
-      "loglevel": "debug"
+      "loglevel": "info"
     }
 }

@@ -1,6 +1,7 @@
 const fetch = require("node-fetch")
 const transfer_patient = require("./patient")
 const { source, dest, checkinsert } = require("../db")
+const {loaddata}=require('../faker/faker')
 const log=require('../logger')
 
 const exec = async def => {
@@ -21,6 +22,9 @@ const exec = async def => {
       const res = await dest.raw(trimmed)
       // console.log(res)
     }
+  }
+  if(def.random){
+    await loaddata()
   }
   const patids = await source("kontakt")
     .where({ istpatient: "1", deleted: "0" })

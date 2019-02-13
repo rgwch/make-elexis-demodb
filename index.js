@@ -23,6 +23,7 @@ conn.query("DROP DATABASE " + destdb, err => {
       throw err
     }
     conn.end()
+    
     processor(cfg.get("process"))
       .then(result => {
         console.log(result)
