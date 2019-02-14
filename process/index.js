@@ -1,9 +1,19 @@
-const fetch = require("node-fetch")
+/********************************************
+ * This file is part of Make-Demodb         *
+ * Copyright (c) 2019 by G. Weirich         *
+ * License and terms: see LICENSE           *
+ ********************************************/
+
 const transfer_patient = require("./patient")
-const { source, dest, checkinsert, copytable } = require("../db")
-const { loaddata } = require('../faker/faker')
+const { source, copytable } = require("../db")
+const { loaddata } = require('../faker')
 const log = require('../logger')
 
+/**
+ * Main module of the processing. First, transfer some tables fully, then select the requested
+ * number of random patient entries and process them.
+ * @param {*} def 
+ */
 const exec = async def => {
   if (def.random) {
     await loaddata()

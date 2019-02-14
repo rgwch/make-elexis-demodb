@@ -1,25 +1,41 @@
+/********************************************
+ * This file is part of Make-Demodb         *
+ * Copyright (c) 2019 by G. Weirich         *
+ * License and terms: see LICENSE           *
+ ********************************************/
+
 const knex = require("knex")
 const cfg = require("config")
 const log = require("./logger")
 
+/**
+ * Some database related functions
+ */
+
+ /**
+  * knex connection to the source database
+  */
 const source = knex({
   client: cfg.get("source.client"),
   connection: cfg.get("source.connection")
 })
 
+/**
+ * knex connection to the destination database
+ */
 const dest = knex({
   client: cfg.get("dest.client"),
   connection: cfg.get("dest.connection")
 })
 
 /**
- * check if an element exists in a table. If not, insert it.
+ * check if an element exists in a table of dest. If not, insert it.
  * @param {string} table the table to check
  * @param {object} element the (full) element to check
  */
 const checkinsert = async (table, element) => {
   if (!element) {
-    log.warn(`element is undefined in checkinsert ${table}. Aborting`)
+    log.warn(`element is undefined in checkinsert ${table}. Skipping`)
   } else {
     log.debug(`Checkinsert ${element.id} in ${table}`)
     try {
@@ -47,7 +63,7 @@ const checkinsert = async (table, element) => {
 const checktransfer = async (table, id) => {
   log.debug(`Checktransfer ${id} in ${table}`)
   if (!id) {
-    log.warn("id is undefined. Aborting")
+    log.warn("id is undefined. Skipping")
   } else {
     try {
       const elems = await source(table).where("id", id)
@@ -74,11 +90,15 @@ const checktransfer = async (table, id) => {
   }
 }
 
+/**
+ * Copy a whole table with all rows from source to dest
+ * @param {string} tablename 
+ */
 const copytable = async tablename => {
   try {
     const entries = await source(tablename)
     for (const entry of entries) {
-      dest(tablename).insert(entry)
+      await dest(tablename).insert(entry)
     }
   } catch (err) {
     log.error(`Error while copying table ${tablename}: `, err)

@@ -1,7 +1,16 @@
-const checkKontakt = require("./kontakt")
+/********************************************
+ * This file is part of Make-Demodb         *
+ * Copyright (c) 2019 by G. Weirich         *
+ * License and terms: see LICENSE           *
+ ********************************************/
+
 const { source, dest, checkinsert, checktransfer } = require("../db")
 const transfer_encounter=require('./encounter')
 
+/**
+ * process a "Fall" object and handle dependend objects such as 'behandlungen' and 'rechnungen'
+ * @param {*} fall 
+ */
 const transfer = async fall => {
   if (fall.garantid) {
     await checktransfer('kontakt', fall.garantid)

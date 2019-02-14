@@ -1,7 +1,17 @@
-const { source, dest, checkinsert, checktransfer } = require("../db")
+/********************************************
+ * This file is part of Make-Demodb         *
+ * Copyright (c) 2019 by G. Weirich         *
+ * License and terms: see LICENSE           *
+ ********************************************/
+
+const { checkinsert, checktransfer } = require("../db")
 const checkKontakt = require("./kontakt")
 const log = require("../logger")
 
+/**
+ * process articles. We must deal with the fact that Elexis currently has several article 
+ * implementations in different tables in parallel.
+ */
 const exec = async joint => {
   await checkinsert("patient_artikel_joint", joint)
   await checkKontakt(joint.prescriptor)
@@ -35,7 +45,7 @@ const exec = async joint => {
     await checkKontakt(article.lieferantid)
   }
   if(article){
-    /*
+    /* Doesn't work for now cause of database constraints. So no stock data.
     const stockentries=await source('stock_entry').where('article_id',id)
     for(const entry of stockentries){
       await checkinsert('stock_entry',entry)
@@ -45,6 +55,9 @@ const exec = async joint => {
       }
     }
     */
+   if(joint.rezeptid){
+     await checktransfer('rezepte',joint.rezeptid)
+   }
   }
   // await checktransfer("artikel_details", id)
 }

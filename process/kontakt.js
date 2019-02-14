@@ -1,5 +1,11 @@
+/********************************************
+ * This file is part of Make-Demodb         *
+ * Copyright (c) 2019 by G. Weirich         *
+ * License and terms: see LICENSE           *
+ ********************************************/
+
 const { source, dest, checkinsert } = require("../db")
-const { getFirstname, getLastname } = require("../faker/faker")
+const { getFirstname, getLastname } = require("../faker")
 const cfg = require("config")
 const def = cfg.get("process")
 

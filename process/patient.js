@@ -1,8 +1,19 @@
+/********************************************
+ * This file is part of Make-Demodb         *
+ * Copyright (c) 2019 by G. Weirich         *
+ * License and terms: see LICENSE           *
+ ********************************************/
+
 const transfer_fall = require("./fall")
 const { source, dest, checkinsert, checktransfer } = require("../db")
 const checkKontakt = require("./kontakt.js")
 const transfer_articles = require("./article")
 
+/**
+ * Process a 'patient' entry and handle dependent objects such as 'articles', 'faelle',
+ * 'konto', 'laborwerte', 'briefe', 'auf'
+ * @param {*} patid 
+ */
 const transfer = async patid => {
   const pat = await checkKontakt(patid)
   const cases = await source("faelle").where({
@@ -43,6 +54,11 @@ const transfer = async patid => {
       await checkKontakt(item.laborid)
     }
     await checkKontakt(laborwert.originid)
+  }
+
+  const aufs=await source('auf').where('patientid',patid)
+  for(const auf of aufs){
+    await checkinsert('auf',auf)
   }
   return pat
 }

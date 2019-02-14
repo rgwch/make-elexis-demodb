@@ -81,14 +81,18 @@ anonymizing, the following procedure is recommended
 
 Make-demodb does copy the following data:
 
-* The full contents of 'config' and 'userconfig' tables
+* The full contents of followjng tables: 'config', 'userconfig', 'vk_preise', 'user_', 'role', 'user_role_joint','right_','role_right_joint','xid','etiketten', 'etiketten_object_link', 'etiketten_objclass_link','dbimage','reminders','reminders_responsible_link' 
 * As many Patient data from 'kontakt' as indicated by the 'number' configuration.
 * cases from 'faelle' belonging to selected patients.
 * encounter data from 'behandlungen' matching to selected cases.
 * Articles from 'artikel' belonging to selected patients.
 * Articles from 'artikelstamm_ch' belonging to selected patients.
 * bills from 'rechnungen' belonging to selected cases.
-* payment from 'zahlungen' belonging to selected bills.
+* payments from 'zahlungen' belonging to selected bills.
+* certificates from 'auf' belonging to selected patients.
+* lab values from 'laborwerte' belonging to selected patients.
+* lab items drom 'laboritems' belonging to selected lab values.
+* prescriptions from 'rezepte' containing selected articles.
 
 Make-demodb does not copy the following data:
 

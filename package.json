@@ -11,7 +11,7 @@
     "url": "ssh://vgit:/home/gerry/make-demodb"
   },
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "config": "^3.0.1",
     "knex": "^0.16.3",

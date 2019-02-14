@@ -1,5 +1,16 @@
+/********************************************
+ * This file is part of Make-Demodb         *
+ * Copyright (c) 2019 by G. Weirich         *
+ * License and terms: see LICENSE           *
+ ********************************************/
+
 const fetch = require('node-fetch')
-const log = require('../logger')
+const log = require('./logger')
+
+/**
+ * Helper to convert real names to fake names. We use the name list originally provided with the 
+ * Elexis Plugin "dbshaker".
+ */
 
 const firstnames_url = "https://raw.githubusercontent.com/rgwch/elexis-3-base/ungrad2019/bundles/ch.elexis.support.dbshaker/rsc/vornamen.txt"
 const lastnames_url = "https://raw.githubusercontent.com/rgwch/elexis-3-base/ungrad2019/bundles/ch.elexis.support.dbshaker/rsc/nachnamen.txt"

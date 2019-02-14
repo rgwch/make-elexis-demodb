@@ -1,6 +1,16 @@
+/********************************************
+ * This file is part of Make-Demodb         *
+ * Copyright (c) 2019 by G. Weirich         *
+ * License and terms: see LICENSE           *
+ ********************************************/
+
 const { source, checkinsert, checktransfer } = require('../db')
 const checkKontakt  = require('./kontakt')
 
+/**
+ * process an encounter and handle dependend objects such as 'leistungen' and 'diagnosen'.
+ * @param {object} encounter 
+ */
 const transfer = async (encounter) => {
   await checkKontakt(encounter.mandantid)
   await checktransfer("rechnungen", encounter.rechnungsid)

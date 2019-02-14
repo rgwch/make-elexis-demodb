@@ -2,8 +2,6 @@
 
 # usage: ./copy_structure user pwd sourcedb destdb
 
-echo $1
-echo $4
 mysql -u $1 -p$2 -e "drop database $4"
 mysql -u $1 -p$2 -e "create database $4"
 mysqldump -u $1 -p$2 -d $3 | mysql -u $1 -p$2 -D $4
