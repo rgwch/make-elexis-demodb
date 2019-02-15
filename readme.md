@@ -9,7 +9,7 @@ At this time, only mysql systems are supported. But it should not be too difficu
 * A working elexis database
 * The mysqldump utility must be installed and available
 * NodeJS 11 or higher
-* The utility works only on normalized (i.e. all lowercase) Elexis-Databases. To normalize an elexis database you might use a tool like [normalize_mysqldb](https://www.npmjs.com/package/@rgwch/normalize_mysqldb). Normalizing should habe no impact on normal Elexis operation, but I'd recommend to test on a database copy first.
+* The utility works only on normalized (i.e. all lowercase) Elexis-Databases. To normalize an elexis database you might use a tool like [normalize_mysqldb](https://www.npmjs.com/package/@rgwch/normalize_mysqldb). Normalizing should have no impact on normal Elexis operation, but I'd recommend to test on a database copy first.
 
 ## Preparation and run
 
