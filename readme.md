@@ -9,16 +9,17 @@ At this time, only mysql systems are supported. But it should not be too difficu
 * A working elexis database
 * The mysqldump utility must be installed and available
 * NodeJS 11 or higher
+* The utility works only on normalized (i.e. all lowercase) Elexis-Databases. To normalize an elexis database you might use a tool like [normalize_mysqldb](https://www.npmjs.com/package/@rgwch/normalize_mysqldb). Normalizing should habe no impact on normal Elexis operation, but I'd recommend to test on a database copy first.
 
 ## Preparation and run
 
 * create a user with full access to the demo database (or use an existing user for that), e.g `GRANT ALL ON demodb.* to elexisuser@'%' identified by 'topsecret';`
-* prepare the configuration for access to source and dest-Databas ein config/default.json
+* prepare the configuration for access to source and dest- databases in config/default.json
 * run the script with `node index.js`
 
 You can also create several configurations in config, e.g 'praxis2.json' and then run with: `NODE_ENV=praxis2 node index.js`
 
-The script will run ./copy_structure at the beginning to create an empty demo-database. So if you wish any special processing or different databases, you can modify ./copy_structure accordingly.
+The script will run `./copy_structure` at the beginning to create an empty demo-database. So if you wish any special processing or different databases, you can modify ./copy_structure accordingly.
 
 ### Result
 
@@ -37,7 +38,7 @@ All Configuration happens in config/*.json
 
 ```json
 {
-    "source":{  // The original database
+    "source":{  // The original database, must be normalized
       "client": "mysql2",   // All databases supported by knexjs are possible
       "connection":{
         "host": "localhost",
@@ -56,8 +57,8 @@ All Configuration happens in config/*.json
       }
     },
     "process":{
-      "number": 100,        // Number of Patient datasets to transmit
-      "random": true,       // Select randomly (or ue the first "number" entried)
+      "number": 50,         // Number of Patient datasets to transmit
+      "random": true,       // Select randomly (or use the first "number" entried)
       "anonymize": true,    // replace all names with fake names
       "loglevel": "info"    // One of debug, info, warn, error
     }
@@ -68,7 +69,7 @@ All Configuration happens in config/*.json
 
 ### Anonymization
 
-Only the names are anonymized. Encounter entries and documents stay unmodified. If you want more
+Only the names and cases are anonymized. Encounter entries and documents stay unmodified. If you want more
 anonymizing, the following procedure is recommended
 
 * create a full copy of your database (e.g. with mysqldump and reload)
@@ -99,3 +100,4 @@ Make-demodb does not copy the following data:
 * external documents from 'omnivore' (since anonymizing would not be possible)
 * outgoing documents from 'briefe' (since anonymizing qould be quite difficult)
 * Blobs from 'Ĥeap' and 'heaps' (since anonymizing can't be guaranteed)
+
