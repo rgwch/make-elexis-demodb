@@ -92,12 +92,12 @@ Make-demodb does copy the following data:
 * payments from 'zahlungen' belonging to selected bills.
 * certificates from 'auf' belonging to selected patients.
 * lab values from 'laborwerte' belonging to selected patients.
-* lab items drom 'laboritems' belonging to selected lab values.
+* lab items from 'laboritems' belonging to selected lab values.
 * prescriptions from 'rezepte' containing selected articles.
 
 Make-demodb does not copy the following data:
 
 * external documents from 'omnivore' (since anonymizing would not be possible)
-* outgoing documents from 'briefe' (since anonymizing qould be quite difficult)
-* Blobs from 'Ĥeap' and 'heaps' (since anonymizing can't be guaranteed)
+* outgoing documents from 'briefe' (since anonymizing would be quite difficult)
+* Blobs from 'Ĥeap' and 'heap2' (since anonymizing can't be guaranteed)
 
