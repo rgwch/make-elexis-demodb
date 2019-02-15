@@ -9,11 +9,11 @@ At this time, only mysql systems are supported. But it should not be too difficu
 * A working elexis database
 * The mysqldump utility must be installed and available
 * NodeJS 11 or higher
-* The utility works only on normalized (i.e. all lowercase) Elexis-Databases. To normalize an elexis database you might use a tool like [normalize_mysqldb](https://www.npmjs.com/package/@rgwch/normalize_mysqldb). Normalizing should habe no impact on normal Elexis operation, but I'd recommend to test on a database copy first.
+* The utility works only on normalized (i.e. all lowercase) Elexis-Databases. To normalize an elexis database you might use a tool like [normalize_mysqldb](https://www.npmjs.com/package/@rgwch/normalize_mysqldb). Normalizing should have no impact on normal Elexis operation, but I'd recommend to test on a database copy first.
 
 ## Preparation and run
 
-* create a user with full access to the demo database (or use an existing user for that), e.g `GRANT ALL ON demodb.* to elexisuser@'%' identified by 'topsecret';`
+* create a user with full access to both, the source and the destination database (or use an existing user for that), e.g `GRANT ALL ON demodb.* to elexisuser@'%' identified by 'topsecret';`
 * prepare the configuration for access to source and dest- databases in config/default.json
 * run the script with `node index.js`
 
@@ -36,7 +36,7 @@ The destination database is just a valid elexis database. You can use it directl
 
 All Configuration happens in config/*.json
 
-```json
+```js
 {
     "source":{  // The original database, must be normalized
       "client": "mysql2",   // All databases supported by knexjs are possible
@@ -92,12 +92,12 @@ Make-demodb does copy the following data:
 * payments from 'zahlungen' belonging to selected bills.
 * certificates from 'auf' belonging to selected patients.
 * lab values from 'laborwerte' belonging to selected patients.
-* lab items drom 'laboritems' belonging to selected lab values.
+* lab items from 'laboritems' belonging to selected lab values.
 * prescriptions from 'rezepte' containing selected articles.
 
 Make-demodb does not copy the following data:
 
 * external documents from 'omnivore' (since anonymizing would not be possible)
-* outgoing documents from 'briefe' (since anonymizing qould be quite difficult)
-* Blobs from 'Ĥeap' and 'heaps' (since anonymizing can't be guaranteed)
+* outgoing documents from 'briefe' (since anonymizing would be quite difficult)
+* Blobs from 'Ĥeap' and 'heap2' (since anonymizing can't be guaranteed)
 
