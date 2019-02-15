@@ -36,7 +36,7 @@ The destination database is just a valid elexis database. You can use it directl
 
 All Configuration happens in config/*.json
 
-```json
+```js
 {
     "source":{  // The original database, must be normalized
       "client": "mysql2",   // All databases supported by knexjs are possible
