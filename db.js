@@ -63,7 +63,7 @@ const checkinsert = async (table, element) => {
 const checktransfer = async (table, id) => {
   log.debug(`Checktransfer ${id} in ${table}`)
   if (!id) {
-    log.warn("id is undefined. Skipping")
+    log.info("id is undefined. Skipping")
   } else {
     try {
       const elems = await source(table).where("id", id)

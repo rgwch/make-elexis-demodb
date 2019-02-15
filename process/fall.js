@@ -4,20 +4,30 @@
  * License and terms: see LICENSE           *
  ********************************************/
 
-const { source, dest, checkinsert, checktransfer } = require("../db")
+const { source, checkinsert} = require("../db")
+const checkKontakt=require('./kontakt')
+const {getNumber}=require('../faker')
 const transfer_encounter=require('./encounter')
+const cfg=require('config')
+const proc=cfg.get("process")
 
 /**
- * process a "Fall" object and handle dependend objects such as 'behandlungen' and 'rechnungen'
+ * process a "Fall" object and handle dependend objects such as 'behandlungƒen' and 'rechnungen'
  * @param {*} fall 
  */
 const transfer = async fall => {
   if (fall.garantid) {
-    await checktransfer('kontakt', fall.garantid)
+    await checkKontakt(fall.garantid)
   }
   if (fall.kostentrid) {
-    await checktransfer('kontakt', fall.kostentrid)
+    await checkKontakt(fall.kostentrid)
   }
+  if(proc.anonymize){
+    fall.versnummer=getNumber(10)
+    fall.fallnummer=getNumber(15)
+    delete fall.extinfo
+  }
+
   await checkinsert('faelle',fall)
 
   const encounters=await source("behandlungen").where("fallid",fall.id)
