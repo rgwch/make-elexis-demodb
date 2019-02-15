@@ -13,7 +13,7 @@ At this time, only mysql systems are supported. But it should not be too difficu
 
 ## Preparation and run
 
-* create a user with full access to the demo database (or use an existing user for that), e.g `GRANT ALL ON demodb.* to elexisuser@'%' identified by 'topsecret';`
+* create a user with full access to both, the source and the destination database (or use an existing user for that), e.g `GRANT ALL ON demodb.* to elexisuser@'%' identified by 'topsecret';`
 * prepare the configuration for access to source and dest- databases in config/default.json
 * run the script with `node index.js`
 
