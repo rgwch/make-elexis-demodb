@@ -16,10 +16,15 @@ FROM user_ u LEFT JOIN user_role_joint urj ON u.id = urj.user_id LEFT JOIN role 
 LEFT JOIN role_right_joint rrj ON r.id = rrj.role_id LEFT JOIN right_ ri ON rrj.id = ri.id
 ORDER BY u.id;`
 
+const dr1 = "alter table bestellung_entry drop foreign key fk_bestellung_entry_bestellung_id;"
+const dr2 = "alter table zusatzadresse drop foreign key fk_zusatzadresse_kontakt_id;"
+
 const create_views = async () => {
   try {
     const no1 = await dest.raw(rpr)
     const no2 = await dest.raw(rpu)
+    const no3 = await dest.raw(dr1)
+    const no4 = await dest.raw(dr2)
   } catch (err) {
     log.error("Error while creating views ", err)
   }
