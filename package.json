@@ -10,7 +10,7 @@
     "type": "git",
     "url": "ssh://vgit:/home/gerry/make-demodb"
   },
-  "author": "",
+  "author": "rgwch",
   "license": "MIT",
   "dependencies": {
     "config": "^3.0.1",
