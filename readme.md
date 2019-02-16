@@ -30,6 +30,8 @@ The script will run `./copy_structure` at the beginning to create an empty demo-
 
 ### Postprocess
 
+The last step of the extraction process is creation of some VIEWS (rights_per_role and rights_per_user) (which can't be copied).
+
 The destination database is just a valid elexis database. You can use it directly, or create a dump from it to transfer on another machine.
 
 ## Configuration

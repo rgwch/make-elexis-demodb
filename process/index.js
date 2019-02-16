@@ -7,6 +7,7 @@
 const transfer_patient = require("./patient")
 const { source, copytable } = require("../db")
 const { loaddata } = require("../faker")
+const create_views=require('./createviews')
 const log = require("../logger")
 
 /**
@@ -57,6 +58,7 @@ const exec = async def => {
       log.debug(`Finished ${pat.bezeichnung1} ${pat.bezeichnung2}, ${pat.geburtsdatum} `)
     }
   }
+  await create_views()
   return "ok"
 }
 

@@ -60,7 +60,7 @@ const loaddata = async () => {
 }
 
 const getRandom = arr => {
-  const max = arr.length-1
+  const max = arr.length - 1
   const idx = Math.round(Math.random() * max)
   return arr[idx]
 }
@@ -78,7 +78,7 @@ const getLastname = () => {
 
 const getStreetname = () => {
   const name = getLastname()
-  return name + getRandom(streets) + " " + Math.round(Math.random() * 200)
+  return name + getRandom(streets) + " " + 1 + Math.round(Math.random() * 200)
 }
 const getNumber = length => {
   let ret = ""
@@ -92,11 +92,11 @@ const getCity = () => {
   return getRandom(cities)
 }
 
-const getPhoneNumber=()=>{
-  let ret="555 "
-  ret+=getNumber(3)+" "
-  ret+=getNumber(2)+" "
-  ret+=getNumber(2)
+const getPhoneNumber = () => {
+  let ret = "555 "
+  ret += getNumber(3) + " "
+  ret += getNumber(2) + " "
+  ret += getNumber(2)
   return ret
 }
 
