@@ -23,8 +23,8 @@ const create_views = async () => {
   try {
     const no1 = await dest.raw(rpr)
     const no2 = await dest.raw(rpu)
-    const no3 = await dest.raw(dr1)
-    const no4 = await dest.raw(dr2)
+    // const no3 = await dest.raw(dr1)
+    // const no4 = await dest.raw(dr2)
   } catch (err) {
     log.error("Error while creating views ", err)
   }
