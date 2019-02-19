@@ -4,7 +4,7 @@
  * License and terms: see LICENSE           *
  ********************************************/
 
-const { checkinsert, checktransfer } = require("../db")
+const { checkinsert, checktransfer, source } = require("../db")
 const checkKontakt = require("./kontakt")
 const log = require("../logger")
 
@@ -45,7 +45,6 @@ const exec = async joint => {
     await checkKontakt(article.lieferantid)
   }
   if(article){
-    /* Doesn't work for now cause of database constraints. So no stock data.
     const stockentries=await source('stock_entry').where('article_id',id)
     for(const entry of stockentries){
       await checkinsert('stock_entry',entry)
@@ -54,7 +53,6 @@ const exec = async joint => {
         await checkinsert('stock',stock)
       }
     }
-    */
    if(joint.rezeptid){
      await checktransfer('rezepte',joint.rezeptid)
    }
