@@ -25,15 +25,20 @@ const exec = async joint => {
       case "at.medevit.ch.artikelstamm.elexis.common.ArtikelstammItem":
         await checktransfer("artikelstamm_ch", ref[1])
         break
-      case "ch.elexis.artikel_ch.data.Medikament":
+      case "ch.elexis.data.Artikel":
+      case "ch.elexis.core.eigenartikel.Eigenartikel":
       case "ch.elexis.artikel_ch.data.Medical":
+      case "ch.elexis.artikel_ch.data.Medikament":
+      case "ch.elexis.data.Medical":
+      case "ch.elexis.data.Medikament":
+      case "ch.elexis.eigenartikel.Eigenartikel":
       case "ch.elexis.artikel_ch.data.MiGelArtikel":
       case "ch.elexis.medikamente.bag.data.BAGMedi":
-      case "ch.elexis.core.eigenartikel.Eigenartikel":
+      case "ch.elexis.data.Eigenartikel":
         article = await checktransfer("artikel", ref[1])
         break
       default:
-        log.warn("Unknown article type: ", ref[0])
+        log.warn("Unknown article type: ", ref)
     }
   } else {
     if (joint.artikelid) {
@@ -41,21 +46,21 @@ const exec = async joint => {
       article = await checktransfer("artikel", joint.artikelid)
     }
   }
-  if(article && article.lieferantid){
+  if (article && article.lieferantid) {
     await checkKontakt(article.lieferantid)
   }
-  if(article){
-    const stockentries=await source('stock_entry').where('article_id',id)
-    for(const entry of stockentries){
-      await checkinsert('stock_entry',entry)
-      const stocks=await source('stock').where('id',entry.stock)
-      for(const stock of stocks){
-        await checkinsert('stock',stock)
+  if (article) {
+    const stockentries = await source('stock_entry').where('article_id', id)
+    for (const entry of stockentries) {
+      await checkinsert('stock_entry', entry)
+      const stocks = await source('stock').where('id', entry.stock)
+      for (const stock of stocks) {
+        await checkinsert('stock', stock)
       }
     }
-   if(joint.rezeptid){
-     await checktransfer('rezepte',joint.rezeptid)
-   }
+    if (joint.rezeptid) {
+      await checktransfer('rezepte', joint.rezeptid)
+    }
   }
   // await checktransfer("artikel_details", id)
 }
