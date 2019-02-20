@@ -103,3 +103,17 @@ Make-demodb does not copy the following data:
 * outgoing documents from 'briefe' (since anonymizing would be quite difficult)
 * Blobs from 'Ĥeap' and 'heap2' (since anonymizing can't be guaranteed)
 
+## Elexis-OOB/Webelexis
+
+To create a demo/test-database ready for Elexis-Out Of The Box or Webelexis from a running system, the following steps are required:
+
+* Copy the source database
+* connect the Elexis client with that copy and run the "dbshaker" plugin to anonymize all and remove deleted entries.
+* run [normalize-mysqldb](https://www.npmjs.com/package/@rgwch/normalize_mysqldb) over the database.
+* run [modify_elexis](https://raw.githubusercontent.com/rgwch/webelexis/master/server/modify_elexis.sql) over the database.
+* make sure, "*config/yoursettings.json*" in make-demodb are set correctly for your needs
+* run `NODE_ENV=yoursettings node .`
+* remove all unneccessary users from the table `user_` and rename the needed user.
+* Log in into the demo database from within elexis. Change the password of the logged-in user
+* check carefully possible fields where personal data might be (e.g. Informations on mandators in tarmed-settings or the field 'bezeichnung3' in the table `kontakt`), ore some 'extinfo' fields.
+* `mysqldump` the prepared demo database.
