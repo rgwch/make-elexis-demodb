@@ -12,9 +12,9 @@ const log = require("./logger")
  * Some database related functions
  */
 
- /**
-  * knex connection to the source database
-  */
+/**
+ * knex connection to the source database
+ */
 const source = knex({
   client: cfg.get("source.client"),
   connection: cfg.get("source.connection")
@@ -60,13 +60,14 @@ const checkinsert = async (table, element) => {
  * @param {string} table name of the table
  * @param {string} id id of the element to check
  */
-const checktransfer = async (table, id) => {
+const checktransfer = async (table, id, ext_id) => {
   log.debug(`Checktransfer ${id} in ${table}`)
   if (!id) {
     log.info("id is undefined. Skipping")
   } else {
     try {
-      const elems = await source(table).where("id", id)
+      const column = ext_id || "id"
+      const elems = await source(table).where(column, id)
       if (elems.length === 0) {
         log.warn(`could not retrieve ${id} from ${table}`)
       } else {
