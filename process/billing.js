@@ -33,6 +33,7 @@ const transfer = async leistung => {
             case "ch.elexis.data.LaborLeistung":
                 table = "ch_medelexis_labortarif2009"; break;
             case "ch.elexis.data.TarmedLeistung":
+                await checktransfer("tarmed_extension", leistung.leistg_code)
                 table = "tarmed"; break;
             case "ch.elexis.labortarif2009.data.Labor2009Tarif":
             case "ch.elexis.data.LaborLeistung":
