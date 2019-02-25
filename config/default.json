@@ -18,8 +18,8 @@
       }
     },
     "process":{
-      "number": 100,
-      "random": true,
+      "number": 50,
+      "random": false,
       "anonymize": true,
       "loglevel": "info"
     }

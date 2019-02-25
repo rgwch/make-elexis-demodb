@@ -24,7 +24,7 @@ The script will run `./copy_structure` at the beginning to create an empty demo-
 ### Result
 
 * The script will process as many patients as the value 'process.number' in the configuration indicates.
-* If 'process.random' is true, it will select the patients randomly. Else the first n patients are processed.
+* If 'process.random' is true, it will select the patients randomly. Else the n patients with most recent ecounters are processed (with a query such as `select distinct faelle.patientid, behandlungen.datum from behandlungen inner join faelle on behandlungen.fallid = faelle.id order by behandlungen.datum desc limit ?`).
 * If 'process.anonymize' is true, patient names and contact informations are replaced with fake values while processing- This is highly recommended.
 * When processing a patient entry, all data referenced by this patient will be copied as well (medications, prescriptions, certificates, billings and so on).
 
@@ -60,7 +60,7 @@ All Configuration happens in config/*.json
     },
     "process":{
       "number": 50,         // Number of Patient datasets to transmit
-      "random": true,       // Select randomly (or use the first "number" entried)
+      "random": false,      // Select the most recently encountered "number" (or select randomly if true)
       "anonymize": true,    // replace all names with fake names
       "loglevel": "info"    // One of debug, info, warn, error
     }
@@ -96,6 +96,7 @@ Make-demodb does copy the following data:
 * lab values from 'laborwerte' belonging to selected patients.
 * lab items from 'laboritems' belonging to selected lab values.
 * prescriptions from 'rezepte' containing selected articles.
+* Appointments from 'agntermine' referencing selected patients.
 
 Make-demodb does not copy the following data:
 
@@ -115,5 +116,5 @@ To create a demo/test-database ready for Elexis-Out Of The Box or Webelexis from
 * run `NODE_ENV=yoursettings node .`
 * remove all unneccessary users from the table `user_` and rename the needed user.
 * Log in into the demo database from within elexis. Change the password of the logged-in user
-* check carefully possible fields where personal data might be (e.g. Informations on mandators in tarmed-settings or the field 'bezeichnung3' in the table `kontakt`), ore some 'extinfo' fields.
+* check carefully possible fields where personal data might be (e.g. Informations on mandators in tarmed-settings or the field 'bezeichnung3' in the table `kontakt`), or some 'extinfo' fields.
 * `mysqldump` the prepared demo database.

@@ -5,11 +5,43 @@
  ********************************************/
 
 const transfer_patient = require("./patient")
-const { source, copytable } = require("../db")
+const { source, dest, copytable,checktransfer } = require("../db")
 const { loaddata } = require("../faker")
-const create_views=require('./createviews')
+const create_views = require('./createviews')
 const log = require("../logger")
 
+const fetchRecent = async num => {
+  try {
+    const sql = source('behandlungen').join('faelle', "behandlungen.fallid", "=", "faelle.id").distinct('faelle.patientid')
+      .select('behandlungen.datum').orderBy('behandlungen.datum', "desc").limit(num)
+    console.log(sql.toSQL())  
+    const ids=await(sql)  
+    return ids.map(el=>el.patientid);
+  } catch (err) {
+    log.error("Error while fetching recent", err)
+  }
+}
+
+const fetchRandom = async num => {
+  const patids = await source("kontakt")
+    .where({ istpatient: "1", deleted: "0" })
+    .whereNotNull("geburtsdatum")
+    .whereNot("geburtsdatum", "")
+    .select("id")
+  const l = patids.length
+  const ret = []
+  for (let i = 0; i < num; i++) {
+    let idx = Math.round(l * Math.random())
+    while (ret.some(i=>ret[i]==patids[idx].id)) {
+      idx += 1;
+      if (idx >= l) {
+        idx = 0
+      }
+    }
+    ret.push(patids[idx].id)
+  }
+  return ret;
+}
 /**
  * Main module of the processing. First, transfer some tables fully, then select the requested
  * number of random patient entries and process them.
@@ -35,25 +67,14 @@ const exec = async def => {
   await copytable("reminders")
   await copytable("reminders_responsible_link")
 
-  const patids = await source("kontakt")
-    .where({ istpatient: "1", deleted: "0" })
-    .whereNotNull("geburtsdatum")
-    .whereNot("geburtsdatum", "")
-    .select("id")
-  const l = patids.length
-  log.info(`found ${l} entries, selecting ${def.number}`)
-  for (let i = 0; i < def.number; i++) {
-    let idx = def.random ? Math.round(l * Math.random()) : i
-    while (patids[idx] == "") {
-      idx += 1
-      if (idx >= l) {
-        idx = 0
-      }
-    }
-    const patid = patids[idx]
-    patids[idx] = ""
-    log.info(`Processing ${patid.id}`)
-    const pat = await transfer_patient(patid.id)
+  log.info(`selecting ${def.number} patients`)
+  const selected = def.random ? await fetchRandom(def.number) : await fetchRecent(def.number)
+  for (const patid of selected) {
+    log.info(`Processing ${patid}`)
+    const pat = await transfer_patient(patid)
+    const termine=await source("agntermine").where("patid",patid)
+    await dest("agntermine").insert(termine)
+    await checktransfer("agntermine",patid,"patid")
     if (pat) {
       log.debug(`Finished ${pat.bezeichnung1} ${pat.bezeichnung2}, ${pat.geburtsdatum} `)
     }
@@ -61,5 +82,6 @@ const exec = async def => {
   await create_views()
   return "ok"
 }
+
 
 module.exports = exec
