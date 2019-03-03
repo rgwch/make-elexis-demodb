@@ -115,6 +115,7 @@ To create a demo/test-database ready for Elexis-Out Of The Box or Webelexis from
 * make sure, "*config/yoursettings.json*" in make-demodb are set correctly for your needs
 * run `NODE_ENV=yoursettings node .`
 * remove all unneccessary users from the table `user_` and rename the needed user.
+* remove all unneccessary fields from the table `user_role_joint`.
 * Log in into the demo database from within elexis. Change the password of the logged-in user
 * check carefully possible fields where personal data might be (e.g. Informations on mandators in tarmed-settings or the field 'bezeichnung3' in the table `kontakt`), or some 'extinfo' fields.
 * `mysqldump` the prepared demo database.
